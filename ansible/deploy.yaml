@@ -2,24 +2,25 @@
   hosts: minikube
   become: yes
   tasks:
-    - name: Set Docker env to Minikube
-      shell: |
-        eval $(minikube docker-env)
-      args:
-        executable: /bin/bash
 
-    - name: Copy app code
+    - name: Copy application code
       copy:
         src: ../flask-app/
         dest: /home/ubuntu/flask-app/
 
-    - name: Build Docker image
+    - name: Build Docker image inside Minikube
       shell: |
-        eval $(minikube docker-env)
         cd /home/ubuntu/flask-app
+        /usr/local/bin/minikube docker-env > docker_env.sh
+        source docker_env.sh
         docker build -t flask-app:latest .
+      args:
+        executable: /bin/bash
 
-    - name: Deploy to Kubernetes
+    - name: Deploy app using Kubernetes
       shell: |
+        export KUBECONFIG=/home/ubuntu/.kube/config
         cd /home/ubuntu/flask-app
         kubectl apply -f k8s.yaml
+      args:
+        executable: /bin/bash
