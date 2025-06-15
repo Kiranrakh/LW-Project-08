@@ -1,2 +1,2 @@
 [minikube]
-172.31.38.101 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/key.pem
+172.31.87.20 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/key.pem
